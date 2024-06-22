@@ -1,31 +1,38 @@
-# HOUSE PRICE PREDICTION (KING COUNTY, WA)
+# HOUSE PRICE PREDICTION (KING COUNTY, WASHINGTON)
 
 ## Overview 
-In this project a linear regression analysis on the [Kings County Housing Data](https://github.com/Amberlynnyandow/dsc-1-final-project-online-ds-ft-021119/tree/master/kc_house_data.csv)
-is performed. The goal is to explore the dataset and generate a model to predict the price of Houses in Kings 
+In this project a linear regression analysis on the [King County Housing Data](https://github.com/Amberlynnyandow/dsc-1-final-project-online-ds-ft-021119/tree/master/kc_house_data.csv)
+is performed. The goal is to explore the dataset and generate a model to predict the price of Houses in King 
 County in Washington State. This analysis and the results that follow is of importance to homeowners, realtors 
 and other stakeholders in the King County Housing Market. 
 
 ## Model Assumptions
 The linear regression model operates under the following assumptions:
-- Regression residuals must be normaly distributed
+- Regression residuals must be normally distributed
 - The dependent variable and the independent variable have a linear relationship.
 - The residuals are homoskedastic and not autocorrelated. 
-- Absence of Multicollinearity bewtween the indeppendent variables.
+- Absence of multicollinearity between the independent variables.
+
 To read more on the assumptions of linear regression, click [here](https://www.statisticssolutions.com/assumptions-of-linear-regression/)
 
+## Dependencies
+The [requirements.txt](requirements.txt) file contains the Python libraries needed to run the notebook 
+and the model presented in this project.The dependencies can be installed using:
+```
+pip install -r requirements.txt
+```
 ## Data Preprocessing
 Prior to model building, the dataset must be cleaned and preprocessed. This prepares the dataset to ensure
 it goes into the model, unbiased and in its best form. Dealing with missing values, datatype transformation,
 categorical encoding, outlier detection and multicollinearity check were the main preprocessing steps carried
 out on the data.
 
-### Missing Values and Datatype transformation
+### Missing Values and Datatype Transformation
 The first step after importing the dataset was to ensure that all variables, whether feature or target, conformed
 to the right datatype and had no missing elements. only four features in the dataset had missing observation and 
 this was dealt with by assigning modal values to fill in the missing values in the categorical features and assigning
 mean values to fill in the missing values in the numeric features. To achieve correct datatypes, four variables - 
-condition, grade, zipcode and waterfront were transformed into categorical variables according to the [data description](support/data-description.md)
+condition, grade, zipcode and waterfront were transformed into categorical variables according to the [data description](data-description.md)
 for the dataset.
 
 ### Categorical Encoding
@@ -37,7 +44,7 @@ be encoded.
 ### Outlier Detection
 To deal with outliers that exist in the dataset, outliers were removed by cutting off all values that exist above or
 below three standard deviations from the mean values of each feature. After performing this operation, 15% of the total 
-dataset was dropped from the analysis. This helps to safeguard the model from values that cous potentially swing the 
+dataset was dropped from the analysis. This helps to safeguard the model from values that could potentially swing the 
 model during training. 
 
 ### Multicollinearity Check
@@ -49,16 +56,12 @@ regression coefficient estimates unreliable and the standard errors of the slope
 inflated, leading to problems with the statistical significance of the regression coefficients.
 
 ### Dropped Columns
-After all data preprocessing was performed, several columns were dropped from the datset and the final dataset used to
-develop the price prediction model had 18603 observations with 14 features. The final fatures used in the house price
+After all data preprocessing was performed, several columns were dropped from the dataset and the final dataset used to
+develop the price prediction model had 18603 observations with 14 features. The final features used in the house price
 prediction model were bedrooms, bathrooms, sqft_lot, floors, waterfront, view, condition, grade, yr_built, yr_renovated,
 zipcode, sqft_living15, and sqft_lot15.
 
-## Data Visualization
-
-
 ## Price Prediction Model
-
 **Model Building**
 - The test-train-split was used on the dataset to test the predictive ability of the model. This helps
 to check how the model performs on data not passed through it, similar to how it is expected to perform
@@ -95,6 +98,7 @@ was rejected at 1% level of significance.
 non-significance was rejected at 1% level of significance.
 
 ## Model Performance and Diagnostics
+
 ### Model Performance
 The measure of the error in the  model gives a good sense of its performance. Three error types are examined in this project. The errors are calculated based on the model performance on the test
 dataset after the test-train split. The errors computed are:
@@ -109,7 +113,8 @@ dataset after the test-train split. The errors computed are:
 The null hypothesis states that the variances for the errors are equal while the alternative hypothesis is that the 
 variances are not equal (or at least one is different from the others). Failure to reject the null hypothesis, 
 indicated by the presence of a high p-value implies that the model produces homoskedastic errors. The Breusch-Pagan
-test was used and the results failed to reject the null hypothesis, indicating that the model was homoskedastic.
+test was used and the results rejected the null hypothesis, indicating that the model had some heteroskedasticity.
+ However, this was dealt with by employing a heteroskedastic variance-covariance matrix during the model refit.
 
 - **Autocorrelation** : Autocorrelation refers to the degree of correlation between the values of the same variables
 across different observations in the data. The null hypothesis states that the errors are random (non-autocorrelation)
@@ -126,9 +131,9 @@ that the model errors are normally distributed.
 
 ## Summary
 In this study, a house price prediction model was developed for King County, WA. Prior to model building, missing values
-were dealt with, datatype transformation was carried out, categorical features were encoded, outliers were detected and 
-removed from the data. Finally, multicollinearity checks were carried out on the data to ensure highly correlated features
-were not introduced into the model.
+were dealt with, datatype transformation was carried out, categorical features were encoded, outliers identified and 
+removed from the data. Finally, multicollinearity checks ensured highly correlated features did not remain in 
+the model.
 
 The model performed decently, explaining 77% of the price using 14 features, attaining a high degree of accuracy in predicting
 house prices. It did not violate the statistical assumptions under which it was developed and overall, the model predictions 
@@ -136,7 +141,7 @@ were off cumulatively by $73,547. An improvement on other models developed using
 
 In conclusion, the house price prediction model would prove useful to real estate stakeholders in King County, WA, offering
 them precise and actionable insights. With further refinement and addition of new features, this model has the potential to
-greatly assist in investment decisions, market analysis, and strategic planning in the real estate sector.
+greatly assist in investment decisions, market analysis, and strategic planning in the King County real estate sector.
 
 
 
