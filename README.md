@@ -1,12 +1,15 @@
-# HOUSE PRICE PREDICTION (KING COUNTY, WASHINGTON)
+# HOUSE PRICE PREDICTION (KING COUNTY, WA)
 
 ## Overview 
+
 In this project a linear regression analysis on the [King County Housing Data](https://github.com/Amberlynnyandow/dsc-1-final-project-online-ds-ft-021119/tree/master/kc_house_data.csv)
-is performed. The goal is to explore the dataset and generate a model to predict the price of Houses in King 
-County in Washington State. This analysis and the results that follow is of importance to homeowners, realtors 
-and other stakeholders in the King County Housing Market. 
+is performed. The goal is to explore the dataset and generate a model to predict the price of Houses in King County in
+Washington State. This analysis and the results that follow is of importance to homeowners, realtors, legislators and
+other stakeholders in the King County Housing Market as they would be able to gain insights into the determinants of 
+house prices in their local housing market.
 
 ## Model Assumptions
+
 The linear regression model operates under the following assumptions:
 - Regression residuals must be normally distributed
 - The dependent variable and the independent variable have a linear relationship.
@@ -16,18 +19,21 @@ The linear regression model operates under the following assumptions:
 To read more on the assumptions of linear regression, click [here](https://www.statisticssolutions.com/assumptions-of-linear-regression/)
 
 ## Dependencies
+
 The [requirements.txt](requirements.txt) file contains the Python libraries needed to run the notebook 
 and the model presented in this project.The dependencies can be installed using:
 ```
 pip install -r requirements.txt
 ```
 ## Data Preprocessing
+
 Prior to model building, the dataset must be cleaned and preprocessed. This prepares the dataset to ensure
 it goes into the model, unbiased and in its best form. Dealing with missing values, datatype transformation,
 categorical encoding, outlier detection and multicollinearity check were the main preprocessing steps carried
 out on the data.
 
 ### Missing Values and Datatype Transformation
+
 The first step after importing the dataset was to ensure that all variables, whether feature or target, conformed
 to the right datatype and had no missing elements. only four features in the dataset had missing observation and 
 this was dealt with by assigning modal values to fill in the missing values in the categorical features and assigning
@@ -36,18 +42,21 @@ condition, grade, zipcode and waterfront were transformed into categorical varia
 for the dataset.
 
 ### Categorical Encoding
+
 To ensure all features exist as numeric values for input into the model, the four categorical variables in the dataset - 
 condition, grade, zipcode and waterfront were encoded into numbers using Target encoding. Target encoding was chosen over
 other methods such as one-hot encoding or ordinal encoding due to the high number of categories in some of the features to
 be encoded.
 
 ### Outlier Detection
+
 To deal with outliers that exist in the dataset, outliers were removed by cutting off all values that exist above or
 below three standard deviations from the mean values of each feature. After performing this operation, 15% of the total 
 dataset was dropped from the analysis. This helps to safeguard the model from values that could potentially swing the 
 model during training. 
 
 ### Multicollinearity Check
+
 A multicollinearity check is also performed on the model to ensure the coefficients are not biased. The precision of
 regression coefficients or regression predictions may be decreased if highly correlated explanatory variables are
 included in the model. Multicollinearity which can be detected by high variance inflation factors (VIF) values. To deal 
@@ -56,13 +65,16 @@ regression coefficient estimates unreliable and the standard errors of the slope
 inflated, leading to problems with the statistical significance of the regression coefficients.
 
 ### Dropped Columns
+
 After all data preprocessing was performed, several columns were dropped from the dataset and the final dataset used to
 develop the price prediction model had 18603 observations with 14 features. The final features used in the house price
 prediction model were bedrooms, bathrooms, sqft_lot, floors, waterfront, view, condition, grade, yr_built, yr_renovated,
 zipcode, sqft_living15, and sqft_lot15.
 
 ## Price Prediction Model
-**Model Building**
+
+### Model Building
+
 - The test-train-split was used on the dataset to test the predictive ability of the model. This helps
 to check how the model performs on data not passed through it, similar to how it is expected to perform
 in the real world.
@@ -74,7 +86,8 @@ in the real world.
 - Predictions on the test dataset were made using the trained model and the model summary was extracted. The model summary
 displays the model's intercept and coefficients, along with accompanying hypothesis tests.
 
-**Model Results and Hypothesis Testing**
+### Model Results and Hypothesis Testing
+
 - The model had a constant value of $1,252,000 (One million, two hundred and fifty thousand dollars). This
 represents the average house price in King County when no additional features are added, i.e.,  the house 
 price if all houses were the same.
@@ -97,9 +110,33 @@ was rejected at 1% level of significance.
  King County house prices. For every feature except the 'house renovation year', the null hypothesis of 
 non-significance was rejected at 1% level of significance.
 
+### Model Interpretability with SHAP
+
+The model is assessed for its global interpretability. This provides more context and understanding about the 
+drivers of the house price predictions made by the model. It gives a sense of the importance of each feature in
+making predictions using the mean absolute SHAP value. The mean absolute SHAP value for each feature quantifies, 
+on average, the magnitude (positive or negative) of each feature's contribution towards the predicted house prices.
+Features with higher mean absolute SHAP values are more influential in the price prediction. Mean absolute SHAP 
+values represent the traditional feature importance of models.
+
+The top 5 most important predictors of house price in this model are:
+1. House Zipcode
+2. House Grade.
+3. Age of House (Year it was built).
+4. Number of Bathrooms.
+5. The square footage of interior housing living space for the nearest 15 neighbors.
+
+The 5 least important predictors of house price in this model are:
+1. Presence of a Waterfront.
+2. Year the House was Renovated.
+3. The Condition of the House.
+4. Number of floors in the house.
+5. The number of times the house has been viewed.
+
 ## Model Performance and Diagnostics
 
 ### Model Performance
+
 The measure of the error in the  model gives a good sense of its performance. Three error types are examined in this project. The errors are calculated based on the model performance on the test
 dataset after the test-train split. The errors computed are:
 
@@ -130,17 +167,25 @@ The model QQ-Plot mostly follows the diagonal line in the plot and mean of resid
 that the model errors are normally distributed. 
 
 ## Summary
+
 In this study, a house price prediction model was developed for King County, WA. Prior to model building, missing values
 were dealt with, datatype transformation was carried out, categorical features were encoded, outliers identified and 
 removed from the data. Finally, multicollinearity checks ensured highly correlated features did not remain in 
 the model.
 
-The model performed decently, explaining 77% of the price using 14 features, attaining a high degree of accuracy in predicting
-house prices. It did not violate the statistical assumptions under which it was developed and overall, the model predictions 
-were off cumulatively by $73,547. An improvement on other models developed using the King County Housing Data.
+The model performed decently, explaining 77% of the variations in price using 14 features, attaining a high degree of
+explainability in predicting King County house prices. It did not violate the statistical assumptions under which it 
+was developed and overall, the model predictions were off cumulatively by $73,547.
 
-In conclusion, the house price prediction model would prove useful to real estate stakeholders in King County, WA, offering
-them precise and actionable insights. With further refinement and addition of new features, this model has the potential to
+Factors such as the house's location (zipcode the house was built in), house's grade, house's age, number of bathrooms
+in the house and the square footage of interior housing living space for the nearest 15 neighbors (space cluster effect) 
+were major determinants of house prices in King County. 
+
+The house price prediction model developed could prove useful to real estate stakeholders in King County, WA, offering
+them precise and actionable insights when evaluating house listings for purchase or sale. The model could also find 
+usefulness for legislators while estimating house values more accurately while levying property taxes. 
+
+With further refinement and addition of new features, this model has the potential to
 greatly assist in investment decisions, market analysis, and strategic planning in the King County real estate sector.
 
 

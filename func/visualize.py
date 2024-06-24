@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
+import shap
 import pylab
 from IPython.display import display
 from statsmodels.graphics import tsaplots
@@ -27,14 +28,14 @@ def cat_feature_plot(df):
     plt.show()
 
 def corr_plot(df):
-    corr_matrix = df.corr()
+    corr_matrix = df.corr(numeric_only = False)
     plt.figure(figsize=(20, 15))
     sns.heatmap(corr_matrix, annot=True, cmap='viridis')
     plt.title('Correlation Matrix of Features')
     plt.show()
 
 def corr_table(df):
-    corr = df.corr()
+    corr = df.corr(numeric_only = False)
     display(corr)
 
 def acf_plot(x):
@@ -46,3 +47,8 @@ def acf_plot(x):
 def norm_plot(x):
     sm.qqplot(x.resid, line='s')
     pylab.show();
+
+def feature_importance(model, features):
+    explainer = shap.explainers.Linear(model, features)
+    shap_values = explainer(features)
+    return shap.plots.bar(shap_values, max_display=99, show=False)
