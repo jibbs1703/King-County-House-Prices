@@ -1,0 +1,40 @@
+INITIAL_DROP:
+- id
+- date
+
+NUM_COLUMNS:
+- bedrooms
+- bathrooms
+- sqft_living
+- sqft_lot
+- floors
+- view
+- sqft_above
+- yr_built
+- yr_renovated
+- sqft_living15
+- sqft_lot15
+- sqft_basement
+- lat
+- long
+
+CAT_COLUMNS:
+- waterfront
+- condition
+- grade
+- zipcode
+
+TARGET:
+- price
+
+TEST_SIZE:
+  0.2
+
+VIF_THRESHOLD:
+  5
+
+MODEL_NAME:
+  king-county-model.pkl
+
+MODEL_BUCKET:
+  jibbs-models

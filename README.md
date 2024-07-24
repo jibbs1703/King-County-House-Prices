@@ -67,13 +67,13 @@ inflated, leading to problems with the statistical significance of the regressio
 ### Dropped Columns
 
 After all data preprocessing was performed, several columns were dropped from the dataset and the final dataset used to
-develop the price prediction model had 18603 observations with 14 features. The final features used in the house price
-prediction model were bedrooms, bathrooms, sqft_lot, floors, waterfront, view, condition, grade, yr_built, yr_renovated,
-zipcode, sqft_living15, and sqft_lot15.
+develop the price prediction model had 18603 observations with 15 features. The final features used in the house price
+prediction model were bedrooms, bathrooms, sqft_lot, floors, waterfront, view, longitude, latitude, condition, grade, 
+yr_built, yr_renovated, zipcode, sqft_living15, and sqft_lot15.
 
 ## Price Prediction Model
 
-### Model Building
+### Baseline Model Building
 
 - The test-train-split was used on the dataset to test the predictive ability of the model. This helps
 to check how the model performs on data not passed through it, similar to how it is expected to perform
@@ -81,12 +81,12 @@ in the real world.
 
 - The 80:20 test-train split was used for training and testing this model.
 
-- The linear regression model was instantiated and fitted/trained on the training dataset.
+- The linear regression model was instantiated and fitted/trained on the training dataset as the baseline model.
 
-- Predictions on the test dataset were made using the trained model and the model summary was extracted. The model summary
-displays the model's intercept and coefficients, along with accompanying hypothesis tests.
+- Predictions on the test dataset were made using the trained model and the model summary was extracted. The model
+summary displays the model's intercept and coefficients, along with accompanying hypothesis tests.
 
-### Model Results and Hypothesis Testing
+### Baseline Model Results and Hypothesis Testing
 
 - The model had a constant value of $1,252,000 (One million, two hundred and fifty thousand dollars). This
 represents the average house price in King County when no additional features are added, i.e.,  the house 
@@ -94,14 +94,14 @@ price if all houses were the same.
 
 - The coefficients represent the slopes. In this model, the slopes represent the change in house prices
 caused by a unit change in one feature while holding all other features constant. For example, the 
-coefficient for the year the house was built is -1711, this implies that for every year the house gets older,
-the price drops by $1,711 while holding all other variables constant. In the same vein, an additional bedroom
-causes the house price to rise by $17,990.
+coefficient for the year the house was built is -1359, this implies that for every year the house gets older,
+the price drops by $1,359 while holding all other variables constant. In the same vein, an additional bedroom
+causes the house price to rise by $17,410.
 
-- The model had an R-squared value of 0.771, implying that the model was able to explain about 77.1% of 
+- The model had an R-squared value of 0.784, implying that the model was able to explain about 78.4% of 
 the variation in the dependent variable (i.e., King County house prices).
 
-- The model had an F-statistic of 4802. This implies that jointly, the model features do have a significant
+- The model had an F-statistic of 3259. This implies that jointly, the model features do have a significant
 effect on the dependent variable (i.e., King County house prices). The null hypothesis of non-significance
 was rejected at 1% level of significance. 
 
@@ -110,7 +110,7 @@ was rejected at 1% level of significance.
  King County house prices. For every feature except the 'house renovation year', the null hypothesis of 
 non-significance was rejected at 1% level of significance.
 
-### Model Interpretability with SHAP
+### Baseline Model Interpretability with SHAP
 
 The model is assessed for its global interpretability. This provides more context and understanding about the 
 drivers of the house price predictions made by the model. It gives a sense of the importance of each feature in
@@ -119,30 +119,31 @@ on average, the magnitude (positive or negative) of each feature's contribution 
 Features with higher mean absolute SHAP values are more influential in the price prediction. Mean absolute SHAP 
 values represent the traditional feature importance of models.
 
-The top 5 most important predictors of house price in this model are:
-1. House Zipcode
+The top 5 most important predictors of house price in the base model are:
+1. House Zipcode.
 2. House Grade.
 3. Age of House (Year it was built).
-4. Number of Bathrooms.
-5. The square footage of interior housing living space for the nearest 15 neighbors.
+4. Location of House (Longitude and Latitude).
+5. Number of Bathrooms.
 
-The 5 least important predictors of house price in this model are:
+The 5 least important predictors of house price in the base model are:
 1. Presence of a Waterfront.
 2. Year the House was Renovated.
 3. The Condition of the House.
-4. Number of floors in the house.
-5. The number of times the house has been viewed.
+4. The number of times the house has been viewed.
+5. The square footage of interior housing living space for the nearest 15 neighbors.
 
-## Model Performance and Diagnostics
+## Baseline Model Performance and Diagnostics
 
 ### Model Performance
 
-The measure of the error in the  model gives a good sense of its performance. Three error types are examined in this project. The errors are calculated based on the model performance on the test
-dataset after the test-train split. The errors computed are:
+The measure of the error in the base model gives a good sense of its performance. Three error types are examined in
+this project. The errors are calculated based on the model performance on the test dataset after the test-train
+split. The errors computed are:
 
-- Mean Absolute Error (MAE): which is the mean of the absolute value of errors - $73,547
-- Mean Squared Error (MSE): which is the mean of the squared errors - $10,823,457,615
-- Root Mean Squared Error (RMSE): which is the square root of the mean of the squared errors - $104,035
+- Mean Absolute Error (MAE): which is the mean of the absolute value of errors - $68,200
+- Mean Squared Error (MSE): which is the mean of the squared errors - $8,780,000,000
+- Root Mean Squared Error (RMSE): which is the square root of the mean of the squared errors - $93,700
 
 ### Model Diagnostics
 
@@ -166,6 +167,21 @@ way of checking for the normality of a model's residuals.
 The model QQ-Plot mostly follows the diagonal line in the plot and mean of residuals are very close to zero, indicating 
 that the model errors are normally distributed. 
 
+## Improving on the Base Model Performance and Metrics
+
+To improve on the performance of the base model, other models were also used in predicting King County House prices. The
+RandomForestRegressor model, XGBRegressor model and the HistGradientBoostingRegressor model were employed to improve on
+the base model (linear regression model). All three models showed considerable improvement over the base model, with the 
+HistGradientBoostingRegressor model yielding the highest explainability score for the target variable (house prices).
+
+|             Model              | R-Squared | Mean Absolute Error | Mean Squared Error | Root Mean Squared Error |
+|:------------------------------:|:---------:|:-------------------:|:------------------:|:-----------------------:|
+| Base Model (Linear Regression) |   0.784   |       $68,200       |   $8,780,000,000   |         $93,700         |
+| HistGradientBoostingRegressor  |   0.855   |       $53,900       |   $5,950,000,000   |         $77,100         |
+|     RandomForestRegressor      |   0.845   |       $55,200       |   $6,370,000,000   |         $79,800         |
+|          XGBRegressor          |   0.848   |       $54,900       |   $6,250,000,000   |         $79,000         |
+
+
 ## Summary
 
 In this study, a house price prediction model was developed for King County, WA. Prior to model building, missing values
@@ -173,20 +189,20 @@ were dealt with, datatype transformation was carried out, categorical features w
 removed from the data. Finally, multicollinearity checks ensured highly correlated features did not remain in 
 the model.
 
-The model performed decently, explaining 77% of the variations in price using 14 features, attaining a high degree of
+The base model performed decently, explaining 78.4% of the variations in price using 15 features, attaining a high degree of
 explainability in predicting King County house prices. It did not violate the statistical assumptions under which it 
-was developed and overall, the model predictions were off cumulatively by $73,547.
+was developed and overall, the model predictions were off cumulatively by $68,200. However, the HistGradientBoostingRegressor
+was chosen as it yielded the lowest Mean Absolute Error and the highest R-squared value (0.855) among all models experimented with.
 
 Factors such as the house's location (zipcode the house was built in), house's grade, house's age, number of bathrooms
-in the house and the square footage of interior housing living space for the nearest 15 neighbors (space cluster effect) 
-were major determinants of house prices in King County. 
+in the house,  the longitude and latitude  (location effect) were major determinants of house prices in King County. 
 
 The house price prediction model developed could prove useful to real estate stakeholders in King County, WA, offering
 them precise and actionable insights when evaluating house listings for purchase or sale. The model could also find 
 usefulness for legislators while estimating house values more accurately while levying property taxes. 
 
-With further refinement and addition of new features, this model has the potential to
-greatly assist in investment decisions, market analysis, and strategic planning in the King County real estate sector.
+With further refinement and addition of new features, this model has the potential to greatly assist in investment decisions,
+market analysis, and strategic planning in the King County real estate sector.
 
 
 
