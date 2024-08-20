@@ -1,6 +1,9 @@
 INITIAL_DROP:
 - id
 - date
+- waterfront
+- lat
+- long
 
 NUM_COLUMNS:
 - bedrooms
@@ -15,11 +18,8 @@ NUM_COLUMNS:
 - sqft_living15
 - sqft_lot15
 - sqft_basement
-- lat
-- long
 
 CAT_COLUMNS:
-- waterfront
 - condition
 - grade
 - zipcode
@@ -32,6 +32,23 @@ TEST_SIZE:
 
 VIF_THRESHOLD:
   5
+
+NUM_COLUMNS_SCALED:
+  - bedrooms
+  - bathrooms
+  - sqft_lot
+  - floors
+  - view
+  - yr_built
+  - yr_renovated
+  - sqft_living15
+  - sqft_lot15
+
+CAT_ENCODER:
+  king-county-encoder.pkl
+
+NUM_SCALER:
+  king-county-scaler.pkl
 
 MODEL_NAME:
   king-county-model.pkl

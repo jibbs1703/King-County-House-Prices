@@ -19,9 +19,6 @@ The linear regression model operates under the following assumptions:
 To read more on the assumptions of linear regression, click [here](https://www.statisticssolutions.com/assumptions-of-linear-regression/)
 
 ## Dependencies
-
-The [requirements.txt](requirements.txt) file contains the Python libraries needed to run the notebook 
-and the model presented in this project.The dependencies can be installed using:
 ```
 pip install -r requirements.txt
 ```
@@ -38,7 +35,7 @@ The first step after importing the dataset was to ensure that all variables, whe
 to the right datatype and had no missing elements. only four features in the dataset had missing observation and 
 this was dealt with by assigning modal values to fill in the missing values in the categorical features and assigning
 mean values to fill in the missing values in the numeric features. To achieve correct datatypes, four variables - 
-condition, grade, zipcode and waterfront were transformed into categorical variables according to the [data description](data-description.md)
+condition, grade, zipcode and waterfront were transformed into categorical variables according to the [data description](experiment/data-description.md)
 for the dataset.
 
 ### Categorical Encoding
@@ -182,7 +179,7 @@ HistGradientBoostingRegressor model yielding the highest explainability score fo
 |          XGBRegressor          |   0.848   |       $54,900       |   $6,250,000,000   |         $79,000         |
 
 
-## Summary
+## Model Training Summary
 
 In this study, a house price prediction model was developed for King County, WA. Prior to model building, missing values
 were dealt with, datatype transformation was carried out, categorical features were encoded, outliers identified and 
@@ -203,6 +200,14 @@ usefulness for legislators while estimating house values more accurately while l
 
 With further refinement and addition of new features, this model has the potential to greatly assist in investment decisions,
 market analysis, and strategic planning in the King County real estate sector.
+
+## Model Deployment
+
+The application is containerized and deployed on an AWS EC2 instance, providing availability and reliability of the application 
+for getting house price value estimates. The prediction API endpoint is built in the backend using FastAPI. On the frontend, 
+the User Interface is built using Reflex, allowing for the application to be deployed end to end using python frameworks. 
+
+
 
 
 

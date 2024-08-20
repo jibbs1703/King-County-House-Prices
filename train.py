@@ -43,9 +43,7 @@ if TRAIN == 'T':
 else:
     model_train = ModelTrain()
     model = model_train.model_training(train_features, train_target)
-    # model_pred = ModelPredict()
     test_prediction = ModelPredict.model_prediction(model, test_features, test_target)
-    # test_prediction = model_pred.model_prediction(model, test_features, test_target)
     print(test_prediction.head())
     metrics = ModelMetrics(test_target, test_prediction)
     print(metrics.model_r2())

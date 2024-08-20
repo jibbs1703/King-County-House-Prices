@@ -2,12 +2,14 @@
 import pandas as pd
 import category_encoders as ce
 import statsmodels.api as sm
+from sklearn.preprocessing import MinMaxScaler
 from statsmodels.stats.outliers_influence import variance_inflation_factor
+from training.helpers.aws_services import S3Buckets
 import yaml
+import pickle
 import warnings
 warnings.filterwarnings("ignore")
 
-# Access config.yaml File to Access Saved Parameters
 with open('training/config.yaml', 'r') as file:
     train_yaml = yaml.safe_load(file)
 
@@ -54,19 +56,25 @@ class Transformation:
             std = self.df[col].std()
             self.df = self.df[(self.df[col] > self.df[col].mean() - 3 * self.df[col].std()) & (self.df[col] < self.df[col].mean() + 3 * self.df[col].std())]
 
+
     def cat_encoder(self):
         """
         This function encodes all categorical variables in the input dataframe using Target Encoding
         :return: DataFrame with Target Encoded Categorical Features
         """
         # Instantiate Target Encoder
-        te = ce.TargetEncoder()
+        te = ce.TargetEncoder(cols=train_yaml['CAT_COLUMNS'])
 
-        # Extract the Categorical Columns
-        cat_cols = train_yaml['CAT_COLUMNS']
-        # Target-Encode the Categorical Features
-        for col in cat_cols:
-            self.df[col] = te.fit_transform(self.df[col], self.df[train_yaml['TARGET']])
+        # Fit and transform the features
+        self.df[train_yaml['CAT_COLUMNS']] = te.fit_transform(self.df[train_yaml['CAT_COLUMNS']], self.df[train_yaml['TARGET']])
+
+        # Save the Fitted Encoder To S3 Bucket
+        s3 = S3Buckets.credentials('us-east-2')
+        s3.save_model_to_s3(te, train_yaml['MODEL_BUCKET'], train_yaml['CAT_ENCODER'])
+
+        # To Application Object Directory
+        filename = f"prediction/objects/{train_yaml['CAT_ENCODER']}"
+        pickle.dump(te, open(filename, 'wb'))
 
     def vif_screener(self, vif_threshold=5):
         """
@@ -104,10 +112,33 @@ class Transformation:
         # Filter out the High VIF Columns in the Dataframe
         self.df = self.df[final_columns + train_yaml['TARGET']]
 
+
+    def num_scaler(self):
+        """
+        This function scales all numeric variables in the input dataframe using MinMax Scaler
+        :return: DataFrame with Target Encoded Categorical Features
+        """
+        # Instantiate MinMax Scaler
+        mm = MinMaxScaler()
+        num_cols = train_yaml['NUM_COLUMNS_SCALED']
+
+        # Scale the Numeric variables
+        self.df[num_cols] = mm.fit_transform(self.df[num_cols])
+
+        # Save the Fitted Scaler To S3 Bucket and Object Folder for Offline Availability
+        s3 = S3Buckets.credentials('us-east-2')
+        s3.save_model_to_s3(mm, train_yaml['MODEL_BUCKET'], train_yaml['NUM_SCALER'])
+
+        # To Application Object Directory
+        filename = f"prediction/objects/{train_yaml['NUM_SCALER']}"
+        pickle.dump(mm, open(filename, 'wb'))
+
+
     def run_pipeline(self):
         self.feature_wrangler()
         self.outlier_remover()
         self.cat_encoder()
         self.vif_screener(vif_threshold=train_yaml['VIF_THRESHOLD'])
+        self.num_scaler()
 
         return self.df

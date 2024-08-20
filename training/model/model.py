@@ -3,10 +3,10 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from training.helpers.aws_services import S3Buckets
 import pandas as pd
 import yaml
+import pickle
 
 with open('training/config.yaml', 'r') as file:
     train_yaml = yaml.safe_load(file)
-
 
 class ModelInputs:
     def __init__(self, df):
@@ -37,6 +37,10 @@ class ModelTrain:
         # Save the Fitted Model To S3 Bucket
         s3 = S3Buckets.credentials('us-east-2')
         s3.save_model_to_s3(algorithm, train_yaml['MODEL_BUCKET'], train_yaml['MODEL_NAME'])
+
+        # To Application Object Directory
+        filename = f"prediction/objects/{train_yaml['MODEL_NAME']}"
+        pickle.dump(algorithm, open(filename, 'wb'))
 
         # Return the Fitted Model
         return algorithm
